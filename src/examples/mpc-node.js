@@ -1,25 +1,112 @@
-import { ListMpcRequests, Status } from '../index.js';
+import  { ListMpcRequests, ListAddresses,Status,CreateWallets,GenAddressByPath, GetSupportedChains, SignMessage,GetVaults,ListWallets } from '../index.js';
+import {v4}  from  'uuid';
 
 async function main() {
     const url =
-        'http://shenyu-bootstrap-c.basic-service.dev3.newhuoapps.com/mpc-uc';
+        'https://api.sinohope.com';
     const privKey =
-        '308193020100301306072a8648ce3d020106082a8648ce3d0301070479307702010104206b73de8d3bb167392d8bb2a782801082cf02eca41dca0c718621850ee1413b75a00a06082a8648ce3d030107a1440342000432e5c48d5fdbc6e1e8db0c996173b7b684aadc584d022008c50b4fd76da9b22ac63fdeeebf82ba31da1e6dfba008f8399333f4f8f0e8a865a0eea28fd4668f7b';
+        '308187020100301306072a8648ce3d020106082a8648ce3d030107046d306b02010104203f840def58e6e171ef3e3c101740ea865a1b26cf289e947a6008e879fe56d1fea14403420004ce6acfab87282bfae019d03e5a81a3107a94f73096b3808c6b23c662d683f6d64495a3b85f34c501d3dbc6c3a20cb391ca4b66140ae2fccb3d4a551500c308db';
     const pubKey =
-        '3059301306072a8648ce3d020106082a8648ce3d0301070342000432e5c48d5fdbc6e1e8db0c996173b7b684aadc584d022008c50b4fd76da9b22ac63fdeeebf82ba31da1e6dfba008f8399333f4f8f0e8a865a0eea28fd4668f7b';
-    let api = new ListMpcRequests(url, privKey, pubKey);
-    let data = await api.request({
-        // businessExecType: 1,
-        // businessExecStatus: 1,
-        sinoId: null,
-        pageIndex: 1,
-        pageSize: 50,
-    });
-    console.log({ data });
+        '3059301306072a8648ce3d020106082a8648ce3d03010703420004ce6acfab87282bfae019d03e5a81a3107a94f73096b3808c6b23c662d683f6d64495a3b85f34c501d3dbc6c3a20cb391ca4b66140ae2fccb3d4a551500c308db';
+    
+    const vaultId = "460960045737541";
+    const walletId = "490692555706117";
+    // 生成一个新的GUID
+    const requestId = v4();
 
-    api = new Status(url, privKey, pubKey);
-    data = await api.request();
-    console.log({ data });
+    console.log("requestId:",requestId);
+    
+    let api  = new GetVaults(url,privKey,pubKey);
+
+    let data = await api.request();
+    console.log("vault:",JSON.stringify(data));
+
+    //create address 
+    // api = new GenAddressByPath(url,privKey,pubKey);
+    // data = await api.request({
+    //     vaultId:vaultId,
+    //     index:2,
+    //     algorithmType:0,
+    //     coinType:60,
+    //     walletId: walletId
+    // })
+    //:{"id":"7",
+    // "address":"0x5150a54e26ecc8d338e64e1e7cdd8c1f313a6313",
+    // "hdPath":"m/1/1/60/2","encoding":0,
+    // "pubkey":"03c815b137c7ef4057c5eca5b9de9ad2517669b95bc95028bcdff508701a8aa455"
+    // }
+    // console.log("GenAddressByPath:",JSON.stringify(data));
+
+    api = new SignMessage(url, privKey, pubKey);
+    data = await api.request({
+        requestId: requestId,
+        chainSymbol: "ETH",
+        hdPath: "m/1/1/60/2",
+        signAlgorithm: "personal_sign",
+        message: "232313c429aeda8bf786cf092224dddadbc0813f9f230b",
+    });
+    console.log("SignMessage:",data);
+
+    //CreateWallets {"code":200,"msg":"ok","data":[{"walletId":"490692555706117","walletName":"wallet-1","advancedEnabled":1}],"success":true}
+    // api = new CreateWallets(url,privKey,pubKey);
+    // data = await api.request({
+    //     requestId:"111",
+    //     vaultId:vaultId,
+    //     count:1,
+    //     walletInfos:[{
+    //         walletName:"wallet-1",
+    //         advancedEnabled:1
+    //     }]
+    // });
+    // console.log("CreateWallets",JSON.stringify(data));
+
+    
+    //create address 
+    // api = new GenAddressByPath(url,privKey,pubKey);
+    // data = await api.request({
+    //     vaultId:vaultId,
+    //     index:1,
+    //     algorithmType:0,
+    //     coinType:60,
+    //     walletId: walletId
+    // })
+    // console.log("GenAddressByPath:",JSON.stringify(data));
+
+    // api = new ListAddresses(url,privKey,pubKey);
+    // data = await api.request({
+    //     vaultId: vaultId,
+    //     walletId:walletId,
+    //     chainSymbol:"ETH"
+    // })
+    // console.log("ListAddresses:",JSON.stringify(data))
+
+    // api = new ListWallets(url,privKey,pubKey);
+
+    // data = await api.request({vaultId:"460960045737541"});
+    
+    // console.log("ListWallets:",data);
+
+
+    //  api = new ListMpcRequests(url, privKey, pubKey);
+    //  data = await api.request({
+    //     businessExecType: 1,
+    //     businessExecStatus: 1,
+    //     sinoId: null,
+    //     pageIndex: 1,
+    //     pageSize: 50,
+    // });
+    // console.log(":ListMpcRequests",data );
+
+    // api = new Status(url, privKey, pubKey);
+    // data = await api.request();
+    // console.log("Status:",data);
+
+    // api = new GetSupportedChains(url, privKey, pubKey);
+    // data = await api.request();
+    // console.log("GetSupportedChains:",data);
+
+   
+    
 }
 
 main();

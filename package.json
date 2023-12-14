@@ -15,6 +15,7 @@
         "src"
     ],
     "scripts": {
+        "mpc-test": "node ./src/examples/mpc-node.js",
         "lint": "prettier --ext .js --write {src,test}/** && eslint --ext .js  --fix {src,test}/**",
         "test": "NODE_OPTIONS=--experimental-vm-modules jest -c jest.config.mjs --runInBand --color=always"
     },
@@ -36,9 +37,12 @@
         "prettier": "2.6.2"
     },
     "dependencies": {
+        "@sinohope/js-sdk": "^1.0.2",
         "axios": "1.4.0",
+        "district-data": "^0.0.7",
         "elliptic": "^6.5.4",
         "joi": "17.6.0",
-        "lodash": "4.17.21"
+        "lodash": "4.17.21",
+        "uuid": "^9.0.1"
     }
 }
