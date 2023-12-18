@@ -1,5 +1,6 @@
-import  { ListMpcRequests, ListAddresses,Status,CreateWallets,GenAddressByPath, GetSupportedChains, SignMessage,GetVaults,ListWallets } from '../index.js';
+import  {SignRawData, ListMpcRequests, ListAddresses,Status,CreateWallets,GenAddressByPath, GetSupportedChains, SignMessage,GetVaults,ListWallets } from '../index.js';
 import {v4}  from  'uuid';
+import {BigNumber, ethers} from "ethers";
 
 async function main() {
     const url =
@@ -30,22 +31,48 @@ async function main() {
     //     coinType:60,
     //     walletId: walletId
     // })
-    //:{"id":"7",
+    // :{"id":"7",
     // "address":"0x5150a54e26ecc8d338e64e1e7cdd8c1f313a6313",
     // "hdPath":"m/1/1/60/2","encoding":0,
     // "pubkey":"03c815b137c7ef4057c5eca5b9de9ad2517669b95bc95028bcdff508701a8aa455"
     // }
-    // console.log("GenAddressByPath:",JSON.stringify(data));
+    console.log("GenAddressByPath:",JSON.stringify(data));
 
+    const transaction = {
+        'nonce': 9422, 
+        'gasPrice': 60000000,
+         'gasLimit': 23100, 
+         'to': '0xf1181bd15E8780B69a121A8D8946cC1C23972Bd4', 
+         'value': ethers.utils.parseEther('0.01'), 
+         'chainId': 599, 
+         'data': '0x'
+        }
+    let serializedTransaction = await ethers.utils.serializeTransaction(transaction)
+    console.log("serializedTransaction",serializedTransaction);
+    let msg_hash = ethers.utils.keccak256(serializedTransaction)
+    console.log("msg_hash",msg_hash);
     api = new SignMessage(url, privKey, pubKey);
     data = await api.request({
         requestId: requestId,
         chainSymbol: "ETH",
         hdPath: "m/1/1/60/2",
         signAlgorithm: "personal_sign",
-        message: "232313c429aeda8bf786cf092224dddadbc0813f9f230b",
+        message: msg_hash,
     });
     console.log("SignMessage:",data);
+
+
+    // api = new SignRawData(url,privKey,pubKey)
+    // data = await api.request({
+    //     vaultId: vaultId,
+    //     requestId: requestId,
+    //     walletId: walletId,
+    //     hdPath: "m/1/1/60/2",
+    //     rawData: msg_hash,
+    // });
+    // console.log("SignRawData:",data);
+
+
 
     //CreateWallets {"code":200,"msg":"ok","data":[{"walletId":"490692555706117","walletName":"wallet-1","advancedEnabled":1}],"success":true}
     // api = new CreateWallets(url,privKey,pubKey);

@@ -41,6 +41,7 @@
         "axios": "1.4.0",
         "district-data": "^0.0.7",
         "elliptic": "^6.5.4",
+        "ethers": "^5.7.2",
         "joi": "17.6.0",
         "lodash": "4.17.21",
         "uuid": "^9.0.1"
