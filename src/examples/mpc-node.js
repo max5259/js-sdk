@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 import  {SignRawData, ListMpcRequests, ListAddresses,Status,CreateWallets,GenAddressByPath, GetSupportedChains, SignMessage,GetVaults,ListWallets } from '../index.js';
+=======
+import  { ListMpcRequests,ListAddresses,Status,CreateWallets,GenAddressByPath, GetSupportedChains, SignMessage,GetVaults,ListWallets } from '../index.js';
+>>>>>>> Stashed changes
 import {v4}  from  'uuid';
 import {BigNumber, ethers} from "ethers";
 
@@ -61,6 +65,7 @@ async function main() {
     });
     console.log("SignMessage:",data);
 
+<<<<<<< Updated upstream
 
     // api = new SignRawData(url,privKey,pubKey)
     // data = await api.request({
@@ -72,6 +77,26 @@ async function main() {
     // });
     // console.log("SignRawData:",data);
 
+=======
+    var result = false;
+    const sinoId = data.data.sinoId;
+    console.log("sinoId",sinoId);
+    while(!result){
+        api = new ListMpcRequests(url,privKey,pubKey);
+        data = await api.request({
+            "businessExecType": 3,
+            // "businessExecStatus": 1,
+            "sinoId": sinoId,
+            "pageIndex": 1,
+            "pageSize": 10
+          });
+        console.log("data.data.list;",JSON.stringify(data));
+        if(data.data.list && data.data.list.length>0){
+           const req =  data.data.list[0];
+           result = req.businessExecStatus == 1;
+        }
+    }
+>>>>>>> Stashed changes
 
 
     //CreateWallets {"code":200,"msg":"ok","data":[{"walletId":"490692555706117","walletName":"wallet-1","advancedEnabled":1}],"success":true}
